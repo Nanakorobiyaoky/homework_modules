@@ -59,8 +59,8 @@ function sub(a, b) {
         return sum(a, b.slice(1));
     }
 
-    let firstOperand = a.split('').reverse();
-    let secondOperand = b.split('').reverse();
+    let firstOperand = a.replace(/0*(.+)/, '$1').split('').reverse();
+    let secondOperand = b.replace(/0*(.+)/, '$1').split('').reverse();
     let isNegative = false;
 
     if (firstOperand.length < secondOperand.length) {
@@ -68,7 +68,7 @@ function sub(a, b) {
         isNegative = true;
 
     } else if (firstOperand.length === secondOperand.length) {
-        for (let i = -1; i > -firstOperand.length; i--) {
+        for (let i = -1; i >= -firstOperand.length; i--) {
             if (secondOperand.at(i) > firstOperand.at(i)) {
                 [firstOperand, secondOperand] = [secondOperand, firstOperand];
                 isNegative = true;
@@ -164,27 +164,33 @@ function div(a, b) {
     let firstOperand = a;
     let secondOperand = b;
 
-    let i = 0;
-    let result = '0';
-    while (true) {
-        let resultLen = result.length;
-        let firstOperandLen = firstOperand.length;
-        if (resultLen === firstOperandLen) {
-            for (let j = 0; j < resultLen; j++) {
+    let dividend = '';
+    let storedValue = '';
+    let result = '';
 
-                if (result.at(j) > firstOperand.at(j)) return (isNegative ? '-' : '') + (i - 1).toString();
-                else if (result.at(j) === firstOperand.at(j)) continue
-                else break
+    for (let i = 0; i < firstOperand.length; i++) {
+        dividend = storedValue + firstOperand.at(i);
+        storedValue = '';
+        if (dividend.length < secondOperand.length || sub(dividend, secondOperand).startsWith('-')) {
+            storedValue = dividend;
+            result = result + '0';
+        } else {
+            let recursiveSub = function (dividend, secondOperand) {
+                let currentSub = sub(dividend, secondOperand);
+                if (currentSub.startsWith('-')) return 0;
+                else return recursiveSub(currentSub, secondOperand) + 1;
             }
+            let tempResult =  recursiveSub(dividend, secondOperand);
+            result = result + tempResult;
+            storedValue = sub(dividend, mul(tempResult.toString(), secondOperand));
 
-        } else if (resultLen > firstOperandLen) {
-            return (isNegative ? '-' : '') + (i - 1).toString()
         }
 
-        i++
-        result = mul(secondOperand, i.toString())
-
     }
+
+    result = result.replace(/0*(.+)/, '$1');
+    return result ? formatResult(isNegative, result) : '0';
+
 }
 
 function notANumber(n) {
