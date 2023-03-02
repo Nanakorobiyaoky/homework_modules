@@ -9,6 +9,7 @@ module.exports = {
 };
 
 function sum(a, b) {
+    if (notANumber(a) || notANumber(b)) return NaN;
     let isNegative = false;
 
     if (a.startsWith('-') && b.startsWith('-')) {
@@ -42,12 +43,12 @@ function sum(a, b) {
     }
     resultArr.push(storedValue);
     let result = resultArr.reverse().join('').replace(/^0+(0?.+)/, '$1');
-    if (result === '0') return result;
-    return (isNegative ? '-' : '') + result;
+    return formatResult(isNegative, result)
 
 }
 
 function sub(a, b) {
+    if (notANumber(a) || notANumber(b)) return NaN;
     if (a.startsWith('-') && b.startsWith('-')) {
         a = a.slice(1);
         b = b.slice(1);
@@ -88,21 +89,19 @@ function sub(a, b) {
         if (value < 0) {
             value = +firstOperand.at(i) + storedValue + 10 - (+secondOperand.at(i) ? +secondOperand.at(i) : 0);
             storedValue = -1
-
         } else {
             storedValue = 0
-
         }
+
         resultArr.push(value);
-
     }
-    let result = resultArr.reverse().join('').replace(/^0+(0?.+)/, '$1');
-    if (result === '0') return result;
-    return (isNegative ? '-' : '') + result;
 
+    let result = resultArr.reverse().join('').replace(/^0+(0?.+)/, '$1');
+    return formatResult(isNegative, result)
 }
 
 function mul(a, b) {
+    if (notANumber(a) || notANumber(b)) return NaN;
     let isNegative = false;
 
     if (a.startsWith('-') && b.startsWith('-')) {
@@ -142,11 +141,11 @@ function mul(a, b) {
 
     }
     let result = terms.reduce( (a, b) => sum(a, b), '0');
-    if (result === '0') return result
-    return (isNegative ? '-' : '') + result
+    return formatResult(isNegative, result)
 }
 
 function div(a, b) {
+    if (notANumber(a) || notANumber(b)) return NaN;
     let isNegative = false;
 
     if (a.startsWith('-') && b.startsWith('-')) {
@@ -159,6 +158,8 @@ function div(a, b) {
         b = b.slice(1);
         isNegative = true;
     }
+
+    if (b === '0') return Infinity;
 
     let firstOperand = a;
     let secondOperand = b;
@@ -184,4 +185,13 @@ function div(a, b) {
         result = mul(secondOperand, i.toString())
 
     }
+}
+
+function notANumber(n) {
+    return isNaN(n) || n === null;
+}
+
+function formatResult(isNegative, result) {
+    if (result === '0') return result
+    return (isNegative ? '-' : '') + result
 }

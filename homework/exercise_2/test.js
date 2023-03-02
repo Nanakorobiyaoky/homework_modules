@@ -19,7 +19,7 @@ function checkSub() {
         }
 
         i++;
-        if (i === 10000) break;
+        if (i === 100000) break;
     }
     mistakeFlag ? console.log('mistakes in sub') : console.log('sub is ok');
 }
@@ -40,7 +40,7 @@ function checkSum() {
         }
 
         i++;
-        if (i === 10000) break;
+        if (i === 100000) break;
     }
     mistakeFlag ? console.log('mistakes in sum') : console.log('sum is ok');
 }
@@ -61,7 +61,7 @@ function checkMul() {
         }
 
         i++;
-        if (i === 10000) break;
+        if (i === 100000) break;
     }
 
     mistakeFlag ? console.log('mistakes in mul') : console.log('mul is ok');
@@ -83,7 +83,7 @@ function checkDiv() {
         }
 
         i++;
-        if (i === 10000) break;
+        if (i === 100000) break;
     }
 
     mistakeFlag ? console.log('mistakes in div') : console.log('div is ok');
@@ -93,5 +93,3 @@ checkSum();
 checkSub();
 checkMul();
 checkDiv();
-
-
